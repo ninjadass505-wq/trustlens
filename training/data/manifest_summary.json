@@ -1,0 +1,386 @@
+[
+  {
+    "id": "real_messi.jpg",
+    "path": "train\\real\\real_messi.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "sports_action",
+    "dimensions": "548x342"
+  },
+  {
+    "id": "real_grace_hopper.jpg",
+    "path": "train\\real\\real_grace_hopper.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "portrait_historical",
+    "dimensions": "517x606"
+  },
+  {
+    "id": "real_lena.jpg",
+    "path": "train\\real\\real_lena.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "portrait_standard",
+    "dimensions": "512x512"
+  },
+  {
+    "id": "real_basketball1.png",
+    "path": "train\\real\\real_basketball1.png",
+    "label": "REAL",
+    "split": "train",
+    "category": "sports_action",
+    "dimensions": "640x480"
+  },
+  {
+    "id": "real_basketball2.png",
+    "path": "train\\real\\real_basketball2.png",
+    "label": "REAL",
+    "split": "train",
+    "category": "sports_action",
+    "dimensions": "640x480"
+  },
+  {
+    "id": "real_baboon.jpg",
+    "path": "train\\real\\real_baboon.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "animal_wildlife",
+    "dimensions": "512x512"
+  },
+  {
+    "id": "real_chicky.png",
+    "path": "train\\real\\real_chicky.png",
+    "label": "REAL",
+    "split": "train",
+    "category": "animal_feathers",
+    "dimensions": "512x512"
+  },
+  {
+    "id": "real_butterfly.jpg",
+    "path": "train\\real\\real_butterfly.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "animal_macro",
+    "dimensions": "493x356"
+  },
+  {
+    "id": "real_happyfish.jpg",
+    "path": "train\\real\\real_happyfish.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "animal_underwater",
+    "dimensions": "259x194"
+  },
+  {
+    "id": "real_building.jpg",
+    "path": "train\\real\\real_building.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "architecture_facade",
+    "dimensions": "868x600"
+  },
+  {
+    "id": "real_home.jpg",
+    "path": "train\\real\\real_home.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "architecture_house",
+    "dimensions": "512x384"
+  },
+  {
+    "id": "real_board.jpg",
+    "path": "train\\real\\real_board.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "urban_pattern",
+    "dimensions": "640x480"
+  },
+  {
+    "id": "real_fruits.jpg",
+    "path": "train\\real\\real_fruits.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "food_objects",
+    "dimensions": "512x480"
+  },
+  {
+    "id": "real_apple.jpg",
+    "path": "train\\real\\real_apple.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "food_macro",
+    "dimensions": "512x512"
+  },
+  {
+    "id": "real_blox.jpg",
+    "path": "train\\real\\real_blox.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "objects_geometric",
+    "dimensions": "256x256"
+  },
+  {
+    "id": "real_aloe_l.jpg",
+    "path": "train\\real\\real_aloe_l.jpg",
+    "label": "REAL",
+    "split": "train",
+    "category": "indoor_plants",
+    "dimensions": "1282x1110"
+  },
+  {
+    "id": "ai_dalle2_01.png",
+    "path": "train\\ai\\ai_dalle2_01.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "dalle_2",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "ai_dalle2_02.png",
+    "path": "train\\ai\\ai_dalle2_02.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "dalle_2",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "ai_dalle2_03.png",
+    "path": "train\\ai\\ai_dalle2_03.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "dalle_2",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "ai_dalle2_04.png",
+    "path": "train\\ai\\ai_dalle2_04.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "dalle_2",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "ai_dalle2_05.png",
+    "path": "train\\ai\\ai_dalle2_05.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "dalle_2",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "ai_sd14_fire_photo.png",
+    "path": "train\\ai\\ai_sd14_fire_photo.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "stable_diffusion_1.4",
+    "dimensions": "1550x260"
+  },
+  {
+    "id": "ai_sd14_birdhouse.png",
+    "path": "train\\ai\\ai_sd14_birdhouse.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "stable_diffusion_1.4",
+    "dimensions": "1550x260"
+  },
+  {
+    "id": "ai_sd14_modelfigure.png",
+    "path": "train\\ai\\ai_sd14_modelfigure.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "stable_diffusion_1.4",
+    "dimensions": "435x213"
+  },
+  {
+    "id": "ai_sd14_painting_fire.png",
+    "path": "train\\ai\\ai_sd14_painting_fire.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "stable_diffusion_1.4",
+    "dimensions": "1550x260"
+  },
+  {
+    "id": "ai_sd14_fire.png",
+    "path": "train\\ai\\ai_sd14_fire.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "stable_diffusion_1.4",
+    "dimensions": "1550x260"
+  },
+  {
+    "id": "ai_sdxl_sample000.jpg",
+    "path": "train\\ai\\ai_sdxl_sample000.jpg",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "sdxl",
+    "dimensions": "4096x2048"
+  },
+  {
+    "id": "ai_sdxl_eval001.png",
+    "path": "train\\ai\\ai_sdxl_eval001.png",
+    "label": "SYNTHETIC",
+    "split": "train",
+    "generator": "sdxl",
+    "dimensions": "4216x1024"
+  },
+  {
+    "id": "real_aloe_r.jpg",
+    "path": "val\\real\\real_aloe_r.jpg",
+    "label": "REAL",
+    "split": "val",
+    "category": "indoor_plants",
+    "dimensions": "1282x1110"
+  },
+  {
+    "id": "real_aero1.jpg",
+    "path": "val\\real\\real_aero1.jpg",
+    "label": "REAL",
+    "split": "val",
+    "category": "landscape_aerial",
+    "dimensions": "640x480"
+  },
+  {
+    "id": "real_aero3.jpg",
+    "path": "val\\real\\real_aero3.jpg",
+    "label": "REAL",
+    "split": "val",
+    "category": "landscape_aerial",
+    "dimensions": "640x480"
+  },
+  {
+    "id": "real_starry.jpg",
+    "path": "val\\real\\real_starry.jpg",
+    "label": "REAL",
+    "split": "val",
+    "category": "night_art_texture",
+    "dimensions": "752x600"
+  },
+  {
+    "id": "comp55_real_messi.jpg",
+    "path": "val\\real\\comp55_real_messi.jpg",
+    "label": "REAL",
+    "split": "val",
+    "category": "sports_action_compressed55",
+    "dimensions": "548x342"
+  },
+  {
+    "id": "comp55_real_grace_hopper.jpg",
+    "path": "val\\real\\comp55_real_grace_hopper.jpg",
+    "label": "REAL",
+    "split": "val",
+    "category": "portrait_historical_compressed55",
+    "dimensions": "517x606"
+  },
+  {
+    "id": "ai_sdxl_turbo.png",
+    "path": "val\\ai\\ai_sdxl_turbo.png",
+    "label": "SYNTHETIC",
+    "split": "val",
+    "generator": "sdxl_turbo",
+    "dimensions": "1536x1024"
+  },
+  {
+    "id": "ai_sdxl_test_img.png",
+    "path": "val\\ai\\ai_sdxl_test_img.png",
+    "label": "SYNTHETIC",
+    "split": "val",
+    "generator": "sdxl",
+    "dimensions": "1024x576"
+  },
+  {
+    "id": "comp55_ai_dalle2_01.jpg",
+    "path": "val\\ai\\comp55_ai_dalle2_01.jpg",
+    "label": "SYNTHETIC",
+    "split": "val",
+    "generator": "dalle_2_compressed55",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "comp55_ai_dalle2_02.jpg",
+    "path": "val\\ai\\comp55_ai_dalle2_02.jpg",
+    "label": "SYNTHETIC",
+    "split": "val",
+    "generator": "dalle_2_compressed55",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "comp55_real_lena.jpg",
+    "path": "test\\real\\comp55_real_lena.jpg",
+    "label": "REAL",
+    "split": "test",
+    "category": "portrait_standard_compressed55",
+    "dimensions": "512x512"
+  },
+  {
+    "id": "comp55_real_basketball1.jpg",
+    "path": "test\\real\\comp55_real_basketball1.jpg",
+    "label": "REAL",
+    "split": "test",
+    "category": "sports_action_compressed55",
+    "dimensions": "640x480"
+  },
+  {
+    "id": "comp55_real_basketball2.jpg",
+    "path": "test\\real\\comp55_real_basketball2.jpg",
+    "label": "REAL",
+    "split": "test",
+    "category": "sports_action_compressed55",
+    "dimensions": "640x480"
+  },
+  {
+    "id": "comp55_real_baboon.jpg",
+    "path": "test\\real\\comp55_real_baboon.jpg",
+    "label": "REAL",
+    "split": "test",
+    "category": "animal_wildlife_compressed55",
+    "dimensions": "512x512"
+  },
+  {
+    "id": "comp55_real_chicky.jpg",
+    "path": "test\\real\\comp55_real_chicky.jpg",
+    "label": "REAL",
+    "split": "test",
+    "category": "animal_feathers_compressed55",
+    "dimensions": "512x512"
+  },
+  {
+    "id": "comp55_real_butterfly.jpg",
+    "path": "test\\real\\comp55_real_butterfly.jpg",
+    "label": "REAL",
+    "split": "test",
+    "category": "animal_macro_compressed55",
+    "dimensions": "493x356"
+  },
+  {
+    "id": "comp55_ai_dalle2_03.jpg",
+    "path": "test\\ai\\comp55_ai_dalle2_03.jpg",
+    "label": "SYNTHETIC",
+    "split": "test",
+    "generator": "dalle_2_compressed55",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "comp55_ai_dalle2_04.jpg",
+    "path": "test\\ai\\comp55_ai_dalle2_04.jpg",
+    "label": "SYNTHETIC",
+    "split": "test",
+    "generator": "dalle_2_compressed55",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "comp55_ai_dalle2_05.jpg",
+    "path": "test\\ai\\comp55_ai_dalle2_05.jpg",
+    "label": "SYNTHETIC",
+    "split": "test",
+    "generator": "dalle_2_compressed55",
+    "dimensions": "1024x1024"
+  },
+  {
+    "id": "comp55_ai_sd14_fire_photo.jpg",
+    "path": "test\\ai\\comp55_ai_sd14_fire_photo.jpg",
+    "label": "SYNTHETIC",
+    "split": "test",
+    "generator": "stable_diffusion_1.4_compressed55",
+    "dimensions": "1550x260"
+  }
+]

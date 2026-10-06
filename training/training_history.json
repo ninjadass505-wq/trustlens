@@ -1,0 +1,1340 @@
+{
+  "stage1": [
+    {
+      "stage": 1,
+      "epoch": 1,
+      "train_loss": 0.5752,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.875,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.5,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 1.6,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 98.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 3.4,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 1,
+      "epoch": 2,
+      "train_loss": 0.3424,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.875,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.6,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 2.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 98.6,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 4.7,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 1,
+      "epoch": 3,
+      "train_loss": 0.3505,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.875,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.7,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 2.6,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 6.1,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 1,
+      "epoch": 4,
+      "train_loss": 0.4971,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.8,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 3.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.2,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 7.8,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 1,
+      "epoch": 5,
+      "train_loss": 0.3974,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 1.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 3.8,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.4,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 9.8,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 1,
+      "epoch": 6,
+      "train_loss": 0.2764,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 1.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 4.6,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.5,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.3,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 12.0,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    }
+  ],
+  "stage2": [
+    {
+      "stage": 2,
+      "epoch": 1,
+      "train_loss": 0.3432,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 1.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 4.8,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.5,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.3,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 12.4,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "epoch": 2,
+      "train_loss": 0.4157,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 1.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 5.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.6,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.3,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 13.1,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "epoch": 3,
+      "train_loss": 0.2358,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 1.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 5.3,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.6,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.3,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 14.2,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "epoch": 4,
+      "train_loss": 0.4585,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 1.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 5.6,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.7,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.4,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 15.3,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "epoch": 5,
+      "train_loss": 0.2183,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 1.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 6.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.8,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.4,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 16.8,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "epoch": 6,
+      "train_loss": 0.2836,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.9,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 6.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.8,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.4,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 17.0,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "epoch": 7,
+      "train_loss": 0.22,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.8,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 6.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.8,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.4,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 17.3,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    },
+    {
+      "stage": 2,
+      "epoch": 8,
+      "train_loss": 0.3005,
+      "val_metrics": {
+        "total": 10,
+        "total_real": 6,
+        "total_ai": 4,
+        "TP": 2,
+        "TN": 6,
+        "FP": 0,
+        "FN": 2,
+        "accuracy": 80.0,
+        "precision": 100.0,
+        "recall": 50.0,
+        "f1": 66.67,
+        "real_accuracy": 100.0,
+        "ai_accuracy": 50.0,
+        "false_positive_rate": 0.0,
+        "false_negative_rate": 50.0,
+        "roc_auc": 0.9167,
+        "per_image": [
+          {
+            "file": "comp55_real_grace_hopper.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "comp55_real_messi.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.8,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero1.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.0,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aero3.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.1,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_aloe_r.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 0.2,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "real_starry.jpg",
+            "truth": "REAL",
+            "score_fake_pct": 6.5,
+            "pred": "REAL",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_test_img.png",
+            "truth": "AI",
+            "score_fake_pct": 100.0,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "ai_sdxl_turbo.png",
+            "truth": "AI",
+            "score_fake_pct": 99.8,
+            "pred": "AI",
+            "correct": true
+          },
+          {
+            "file": "comp55_ai_dalle2_01.jpg",
+            "truth": "AI",
+            "score_fake_pct": 0.4,
+            "pred": "REAL",
+            "correct": false
+          },
+          {
+            "file": "comp55_ai_dalle2_02.jpg",
+            "truth": "AI",
+            "score_fake_pct": 18.2,
+            "pred": "REAL",
+            "correct": false
+          }
+        ]
+      }
+    }
+  ],
+  "best_epoch": "stage2_epoch_8",
+  "best_val_f1": 66.67,
+  "best_val_accuracy": 80.0,
+  "best_val_loss": 999.0
+}

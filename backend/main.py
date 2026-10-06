@@ -1,0 +1,283 @@
+from __future__ import annotations
+
+import base64
+import contextlib
+import io
+import ipaddress
+import math
+import re
+from pathlib import Path
+from urllib.parse import urlparse
+
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
+from PIL import Image
+
+try:
+    from backend.detector import detector
+except ImportError:
+    from detector import detector
+
+@contextlib.asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Load detector once at startup (Requirements 5 & 21)
+    try:
+        detector.load_model()
+    except Exception as e:
+        print(f"[TRUSTLENS] Warning: Failed to load detector model at startup: {e}")
+    yield
+
+app = FastAPI(
+    title="TRUSTLENS API",
+    version="2.0.0",
+    description="Explainable scam and media forensic assessment system",
+    lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+class TextRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=20000)
+
+class UrlRequest(BaseModel):
+    url: str = Field(min_length=1, max_length=2048)
+
+class PatchItem(BaseModel):
+    id: str = Field(min_length=1, max_length=128)
+    image: str = Field(description="Base64 or data URL encoded image patch")
+
+class PatchesRequest(BaseModel):
+    patches: list[PatchItem] = Field(min_length=1, max_length=10)
+
+URGENCY = [r"act immediately", r"immediately", r"within \d+\s*(hours?|minutes?)", r"today only", r"account (?:is )?(?:blocked|suspended|locked)", r"final warning", r"expires? today", r"urgent"]
+HARVEST = [r"\botp\b", r"one[- ]time password", r"verification code", r"password", r"login details", r"card number", r"cvv", r"pin\b", r"share (?:the )?code"]
+MONEY = [r"wire transfer", r"send (?:the )?money", r"gift cards?", r"crypto(?:currency)?", r"payment required", r"pay now", r"bank transfer", r"fee of \$?\d"]
+THREAT = [r"arrest warrant", r"police", r"legal action", r"court case", r"deport", r"fine of", r"warrant"]
+ENTITY = [r"\b(?:bank|irs|tax authority|police|government|paypal|microsoft|amazon|apple)\b"]
+
+
+def result(mode: str, indicators: list[dict], extra: dict | None = None) -> dict:
+    points = sum({"High": 3, "Medium": 2, "Low": 1}.get(x["severity"], 0) for x in indicators)
+    level = "High" if points >= 6 else "Medium" if points >= 3 else "Needs Verification" if points else "Low"
+    return {"mode": mode, "risk_level": level, "score": min(points, 10), "indicators": indicators,
+            "progression": progression(indicators), "guidance": guidance(indicators, mode),
+            "disclaimer": "TRUSTLENS provides heuristic risk signals, not a determination that content is genuine or fraudulent. Signals can be wrong or incomplete. Verify independently before acting.", **(extra or {})}
+
+
+def progression(items: list[dict]) -> list[dict]:
+    all_steps = [{"name":"Initial contact","terms":["hello","dear","customer","message","contact" ]}, {"name":"Trust building","terms":["bank","account","support","security","family","police","government"]}, {"name":"Urgency creation","terms":["urgent","immediately","today","blocked","suspended","final warning","within"]}, {"name":"Credential or payment demand","terms":["otp","password","code","pay","transfer","gift card","crypto","cvv"]}]
+    observed = " ".join(i.get("evidence", "").lower() for i in items)
+    return [{"step":s["name"],"observed":any(t in observed for t in s["terms"])} for s in all_steps]
+
+
+def guidance(items: list[dict], mode: str) -> list[str]:
+    tips = ["Do not reply, click links, open attachments, or share codes while you verify.", "Contact the organization using the official app or a number you find independently—not details in the message."]
+    cats = {i.get("category") for i in items}
+    if "credential_harvesting" in cats: tips.append("Never share an OTP, password, PIN, or recovery code; legitimate support should not ask for it.")
+    if "financial_pressure" in cats: tips.append("Pause any payment. Confirm the request with the recipient through a separate, known channel.")
+    if "impersonation" in cats: tips.append("Look up the official organization website yourself and compare the request there.")
+    if mode == "media": tips.append("Confirm the speaker or sender using a known contact method; voice or video appearance alone is not proof.")
+    if mode == "url": tips.append("Do not visit the submitted link. Search for the official domain independently and check the spelling.")
+    return tips
+
+
+def analyze_text(text: str) -> dict:
+    patterns = [("urgency",URGENCY,"High","The message creates time pressure, a common way to discourage careful checking."), ("credential_harvesting",HARVEST,"High","The message mentions credentials or one-time codes that should never be shared."), ("financial_pressure",MONEY,"High","The message appears to request money or a high-risk payment method."), ("threat",THREAT,"Medium","Threats involving authorities or legal consequences can be used to coerce a quick response."), ("impersonation",ENTITY,"Low","An organization or authority is mentioned. A name alone does not prove impersonation.")]
+    hits=[]
+    for cat, pats, sev, explanation in patterns:
+        matches=[re.search(p,text,re.I) for p in pats]
+        match=next((m for m in matches if m),None)
+        if match: hits.append({"category":cat,"severity":sev,"title":cat.replace("_"," ").title(),"explanation":explanation,"evidence":match.group(0)})
+    return result("text", hits)
+
+
+@app.get("/api/health")
+def health():
+    return {
+        "status": "ok",
+        "service": "TRUSTLENS",
+        "model": detector.model_name if detector.loaded else "not_loaded",
+        "model_loaded": detector.loaded,
+        "device": str(detector.device) if detector.loaded else "unknown"
+    }
+
+@app.post("/api/analyze/text")
+def text_endpoint(body: TextRequest):
+    return analyze_text(body.text)
+
+@app.post("/api/analyze/url")
+def url_endpoint(body: UrlRequest):
+    raw=body.url.strip()
+    candidate=raw if "://" in raw else "https://"+raw
+    try: parsed=urlparse(candidate); host=parsed.hostname or ""
+    except ValueError: raise HTTPException(400,"Could not parse URL")
+    if not host: raise HTTPException(400,"Enter a URL with a valid hostname")
+    hits=[]
+    def add(cat,sev,title,explanation,evidence): hits.append({"category":cat,"severity":sev,"title":title,"explanation":explanation,"evidence":evidence})
+    try: ipaddress.ip_address(host); add("ip_hosting","High","Raw IP address","The link points directly to an IP address instead of a recognizable domain.",host)
+    except ValueError: pass
+    tld=host.lower().rstrip(".").split(".")[-1]
+    if tld in {"xyz","top","click","work","zip","country","gq","tk","ml","cf","loan","rest","beauty"}: add("risky_tld","Medium","Higher-risk domain ending","This domain ending is sometimes used in low-cost disposable domains. It is not proof of fraud.","."+tld)
+    if parsed.scheme.lower() != "https": add("insecure_protocol","Medium","No HTTPS","The URL uses an unencrypted HTTP connection.",parsed.scheme)
+    if "@" in parsed.netloc: add("url_obfuscation","High","Obfuscated URL","An @ sign in the authority can make the visible URL misleading.",parsed.netloc)
+    if host.startswith("xn--") or ".xn--" in host: add("lookalike_domain","Medium","Encoded internationalized domain","Punycode can represent lookalike characters; inspect the registered domain carefully.",host)
+    if re.search(r"\d+\.\d+\.\d+\.\d+",host): pass
+    if len(host)>45 or host.count("-")>=3: add("suspicious_structure","Low","Unusual domain structure","The hostname is unusually long or uses many hyphens. This can be legitimate but merits checking.",host)
+    return result("url",hits,{"inspected_host":host,"scheme":parsed.scheme,"path_present":bool(parsed.path and parsed.path!="/"),"network_lookup_performed":False})
+
+@app.post("/api/analyze/image-patches")
+def analyze_image_patches(body: PatchesRequest):
+    """
+    Authoritative Forensic Inference Endpoint:
+    Accepts an array of forensic patches (e.g. 5 multi-scale views)
+    and executes batched inference using OwensLab/commfor-model-224.
+    """
+    if not detector.loaded:
+        # Attempt lazy initialization if not already loaded
+        try:
+            detector.load_model()
+        except Exception as e:
+            raise HTTPException(status_code=503, detail=f"Forensic detector is unavailable: {e}")
+
+    decoded_patches = []
+    for item in body.patches:
+        raw_data = item.image.strip()
+        # Handle data URL prefix if present (e.g., 'data:image/jpeg;base64,...')
+        if "," in raw_data and raw_data.startswith("data:image"):
+            raw_data = raw_data.split(",", 1)[1]
+
+        try:
+            image_bytes = base64.b64decode(raw_data)
+            if len(image_bytes) == 0:
+                raise ValueError("Empty image data")
+            if len(image_bytes) > 20 * 1024 * 1024:
+                raise ValueError("Patch image data exceeds 20 MB limit")
+
+            pil_img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            if pil_img.width < 16 or pil_img.height < 16:
+                raise ValueError(f"Patch dimensions too small ({pil_img.width}x{pil_img.height})")
+            if pil_img.width > 4096 or pil_img.height > 4096:
+                raise ValueError(f"Patch dimensions too large ({pil_img.width}x{pil_img.height})")
+
+            decoded_patches.append({
+                "id": item.id,
+                "image": pil_img
+            })
+        except Exception as err:
+            raise HTTPException(status_code=400, detail=f"Malformed image patch '{item.id}': {err}")
+
+    try:
+        response_data = detector.analyze_patches(decoded_patches)
+        return response_data
+    except Exception as err:
+        raise HTTPException(status_code=500, detail=f"Model inference failed: {err}")
+
+@app.post("/api/analyze/media")
+async def media_endpoint(file: UploadFile=File(...)):
+    allowed={"image/jpeg","image/png","image/webp","image/gif","audio/mpeg","audio/wav","audio/mp4","video/mp4","video/webm","video/quicktime"}
+    if file.content_type not in allowed: raise HTTPException(415,"Supported types: JPEG, PNG, WebP, GIF, MP3, WAV, M4A, MP4, WebM, MOV")
+    data=await file.read(50*1024*1024+1)
+    if len(data)>50*1024*1024: raise HTTPException(413,"File exceeds the 50 MB limit")
+    if not data: raise HTTPException(400,"The uploaded file is empty")
+    
+    hits = []
+    extra_info = {
+        "filename": Path(file.filename or "upload").name,
+        "content_type": file.content_type,
+        "size_bytes": len(data)
+    }
+
+    # Image Forensic Inspection
+    if file.content_type and file.content_type.startswith("image/"):
+        try:
+            from PIL import ExifTags
+            import numpy as np
+
+            img = Image.open(io.BytesIO(data))
+            w, h = img.size
+            extra_info["resolution"] = f"{w}x{h}"
+            extra_info["width"] = w
+            extra_info["height"] = h
+            
+            divisor = math.gcd(w, h)
+            extra_info["aspect_ratio"] = f"{w // divisor}:{h // divisor}"
+
+            # EXIF Extraction
+            exif_dict = {}
+            raw_exif = img.getexif()
+            if raw_exif:
+                for tag_id, value in raw_exif.items():
+                    tag_name = ExifTags.TAGS.get(tag_id, str(tag_id))
+                    if isinstance(value, (str, int, float)):
+                        exif_dict[tag_name] = str(value)
+            
+            camera_make = exif_dict.get("Make", "")
+            camera_model = exif_dict.get("Model", "")
+            software = exif_dict.get("Software", "")
+            extra_info["exif"] = {
+                "make": camera_make,
+                "model": camera_model,
+                "software": software
+            }
+
+            if camera_make or camera_model:
+                hits.append({
+                    "category": "camera_metadata",
+                    "severity": "Low",
+                    "title": "Camera EXIF Detected",
+                    "explanation": "Image contains hardware camera metadata. Note: AI images can copy EXIF, but its presence provides investigative provenance.",
+                    "evidence": f"{camera_make} {camera_model}".strip()
+                })
+            
+            # Forensic Noise Analysis on sample
+            sample_w, sample_h = min(w, 512), min(h, 512)
+            gray = np.array(img.convert("L").resize((sample_w, sample_h)), dtype=np.float32)
+            lap = (
+                np.roll(gray, 1, axis=0) + np.roll(gray, -1, axis=0) +
+                np.roll(gray, 1, axis=1) + np.roll(gray, -1, axis=1) - 4 * gray
+            )[1:-1, 1:-1]
+            lap_var = float(np.var(lap))
+            extra_info["laplacian_variance"] = round(lap_var, 1)
+
+            if lap_var >= 25:
+                hits.append({
+                    "category": "sensor_noise",
+                    "severity": "Low",
+                    "title": "Natural Texture & Noise Profile",
+                    "explanation": "High-frequency variance consistent with physical optical sensor shot noise.",
+                    "evidence": f"Laplacian variance: {round(lap_var, 1)}"
+                })
+            elif lap_var < 5:
+                hits.append({
+                    "category": "texture_smoothing",
+                    "severity": "Medium",
+                    "title": "Unusual Uniform Smoothing",
+                    "explanation": "Very low high-frequency noise variance, common in diffusion-denoised synthetic imagery or vector graphics.",
+                    "evidence": f"Laplacian variance: {round(lap_var, 1)}"
+                })
+
+            extra_info["media_analysis"] = f"Multi-scale forensic properties computed ({w}x{h}, Aspect {extra_info['aspect_ratio']})."
+        except Exception as e:
+            extra_info["media_analysis"] = f"Forensic parsing notice: {str(e)}"
+    else:
+        hits.append({
+            "category": "media_type",
+            "severity": "Low",
+            "title": "Audio/Video Media",
+            "explanation": "Audio and video formats are currently analyzed by metadata properties only.",
+            "evidence": file.content_type
+        })
+        extra_info["media_analysis"] = "File properties analyzed."
+
+    return result("media", hits, extra_info)
+
+frontend_dir = Path(__file__).resolve().parent.parent / "frontend"
+if frontend_dir.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")

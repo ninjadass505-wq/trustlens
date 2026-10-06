@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="theme-color" content="#090e18">
+        <title>TRUSTLENS Risk analyzer</title>
+        <link rel="stylesheet" href="/styles.css">
+    </head>
+    <body>
+        <div class="shell">
+            <aside class="sidebar">
+                <a class="brand" href="/">
+                    <span class="logo"><img src="/Lens Logo.png" alt="TrustLens graphic" width="34" height="34" style="border-radius: 10px;"></span>
+                    <span>TRUST<span class="brand-accent">LENS</span>
+                    <small>PERSONAL SAFETY CONSOLE</small></span>
+                </a>
+                <div class="nav-label">ANALYSIS TOOLS</div>
+                <button class="nav active" data-tab="text"><b><img class="nav-icon"  src="/message.png" alt="message pic" width="15" height="15" style="position: relative; top: 3px;"></b> Message analysis</button>
+                <button class="nav" data-tab="url"><b><img class="nav-icon" src="/LINK INSPECTION.png" alt="link inspection" width="15" height="15" style="position: relative; top: 3px;"></b> Link inspection</button>
+                <button class="nav" data-tab="media"><b><img class="nav-icon"  src="/media signal.png" alt="media signal" width="25" height="15" style="position: relative; left: -4px; top: 3px;"></b> Media signals</button>
+                <div class="sidebar-foot">
+                    <span class="status-dot"></span> PRIVATE SESSION<small>Text/link checks use the local backend. Image inference runs in this browser.</small>
+                </div>
+            </aside><main class="main"><header><div><span class="eyebrow">SAFETY INTELLIGENCE / OVERVIEW</span><h1>Risk Analyzer</h1></div><div class="header-badge"><span class="status-dot"></span> SYSTEM OPERATIONAL</div></header><section class="intro"><div><h2>Pause. Inspect. Verify.</h2><p>Surface observable risk signals before you act. TRUSTLENS explains what it sees and gives you independent steps to check.</p></div><div class="shield"><img src="/Logo 2.png" alt="len PNG" width="58" height="60" style="border-radius: 15px;"></div></section><div class="workspace"><section class="input-card"><div class="tabs"><button class="tab active" data-tab="text">Message</button><button class="tab" data-tab="url">Link</button><button class="tab" data-tab="media">Media</button></div><div class="pane active" id="pane-text"><label for="message">SUSPICIOUS MESSAGE OR TRANSCRIPT</label><textarea id="message" maxlength="20000" placeholder="Paste a text, email, or transcript here"></textarea><div class="input-hint"><span>Analysis stays on your server</span><span id="count">0 / 20,000</span></div></div><div class="pane" id="pane-url"><label for="url">URL TO INSPECT</label><input id="url" type="url" placeholder="https://example.com/path"><p class="help">We inspect URL structure locally. We do not visit the submitted link or check its reputation online.</p></div><div class="pane" id="pane-media"><label>MEDIA FILE</label><label class="dropzone" for="file"><span class="upload-icon"></span><strong id="file-label">Drop a file here or <u>browse</u></strong><small>Any resolution: JPG, PNG, WEBP or GIF up to 50 MB</small></label><input id="file" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden><p class="help">Multi-scale patch forensics preserves native aspect ratio & sensor noise across arbitrary resolutions. Scores are not proof.</p></div><button class="analyze" id="analyze"><span>Analyze risk</span><span></span></button><div class="error" id="error" hidden></div></section><section class="results" id="results"><div class="empty"><div class="empty-icon"></div><h3>Your analysis will appear here</h3><p>Choose an input type, submit content, then review its observable indicators and verification guidance.</p><div class="empty-note">RISK ASSESSMENT  NOT A VERDICT</div></div></section></div><footer>TRUSTLENS Risk signals can be wrong or incomplete. Always verify independently before sharing information or sending money.</footer></main></div><script type="module" src="/app.js"></script></body></html>
+

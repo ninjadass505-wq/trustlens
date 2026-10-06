@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+package-lock.json.backup
+
+# Python Virtual Environments
+.venv/
+venv/
+*/.venv/
+*/venv/
+env/
+ENV/
+
+# Python cache & compiled bytecode
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Build and temporary files
+*.tmp
+.tmp/
+*/.tmp/
+dist/
+build/
+
+# Environment Variables & Local Config
+.env
+.env.*
+*.local
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

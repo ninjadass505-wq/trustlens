@@ -1,0 +1,528 @@
+import { pipeline, env } from '@huggingface/transformers';
+import {
+  parseExif,
+  analyzeForensicSignals,
+  checkApplicability,
+  generateForensicPatches,
+  aggregatePatchEvidence
+} from './forensics.js';
+
+env.localModelPath = '/models/';
+env.allowRemoteModels = false;
+env.allowLocalModels = true;
+// Avoid reusing an earlier cached Vite fallback page as a model config file.
+// The browser's normal HTTP cache can still cache the large ONNX asset.
+env.useBrowserCache = false;
+// Instrument Transformers.js's own fetch. Vite returns index.html for missing
+// asset paths; include that URL instead of showing only a JSON parse error.
+const modelFetch = env.fetch.bind(globalThis);
+env.fetch = async (input, init) => {
+  const response = await modelFetch(input, init);
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.toLowerCase().includes('text/html')) {
+    const requestedUrl = input instanceof Request ? input.url : String(input);
+    throw new Error(
+      `The local model request returned an HTML page instead of a model file: ${requestedUrl} (HTTP ${response.status}). Check that this file exists under frontend/models.`,
+    );
+  }
+
+  return response;
+};
+
+let imageDetectorPromise;
+
+function getImageDetector() {
+  if (!imageDetectorPromise) {
+    imageDetectorPromise = (async () => {
+      try {
+        return await pipeline(
+          'image-classification',
+          'onnx-community/ai-image-detection-ONNX',
+          { device: 'webgpu', dtype: 'q4' }
+        );
+      } catch (gpuErr) {
+        console.warn('[TrustLens] WebGPU initialization failed, falling back to WASM/CPU:', gpuErr);
+        return await pipeline(
+          'image-classification',
+          'onnx-community/ai-image-detection-ONNX',
+          { device: 'wasm', dtype: 'q4' }
+        );
+      }
+    })();
+  }
+
+  return imageDetectorPromise;
+}
+
+const API = '/api';
+const $ = (selector) => document.querySelector(selector);
+let active = 'text';
+
+function setTab(tab) {
+  active = tab;
+
+  document.querySelectorAll('.tab, .nav').forEach((element) => {
+    element.classList.toggle('active', element.dataset.tab === tab);
+  });
+
+  document.querySelectorAll('.pane').forEach((element) => {
+    element.classList.toggle('active', element.id === `pane-${tab}`);
+  });
+
+  $('#error').hidden = true;
+}
+
+document.querySelectorAll('.tab, .nav').forEach((element) => {
+  element.addEventListener('click', () => setTab(element.dataset.tab));
+});
+
+$('#message').addEventListener('input', (event) => {
+  $('#count').textContent =
+    `${event.target.value.length.toLocaleString()} / 20,000`;
+});
+
+$('#file').addEventListener('change', (event) => {
+  $('#file-label').textContent =
+    event.target.files[0]?.name || 'Drop a file here or browse';
+});
+
+$('#analyze').addEventListener('click', run);
+
+function showProgress(steps) {
+  const container = $('#results');
+  let html = `
+    <div class="report-head">
+      <div>
+        <h3>Forensic Analysis in Progress</h3>
+        <div class="score-line">Running client-side multi-scale inspection</div>
+      </div>
+      <span class="badge needs-verification">PROCESSING</span>
+    </div>
+    <div class="progress-stepper">
+      <div class="progress-stepper-title">Analysis Pipeline Progress</div>
+  `;
+
+  for (const step of steps) {
+    html += `
+      <div class="progress-step ${step.done ? 'done' : ''}">
+        <span class="progress-step-icon">${step.done ? '✓' : '○'}</span>
+        <span>${escapeHtml(step.label)}</span>
+      </div>
+    `;
+  }
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+async function run() {
+  const button = $('#analyze');
+  const error = $('#error');
+  error.hidden = true;
+
+  try {
+    button.disabled = true;
+    button.textContent = 'Analyzing…';
+
+    if (active === 'text') {
+      const text = $('#message').value.trim();
+      if (!text) throw new Error('Paste a message or transcript first.');
+
+      const response = await fetch(`${API}/analyze/text`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Text analysis failed.');
+      render(data);
+      return;
+    }
+
+    if (active === 'url') {
+      const url = $('#url').value.trim();
+      if (!url) throw new Error('Enter a URL to inspect.');
+
+      const response = await fetch(`${API}/analyze/url`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'URL analysis failed.');
+      render(data);
+      return;
+    }
+
+    // Media Analysis
+    const file = $('#file').files[0];
+    if (!file) throw new Error('Choose an image file first.');
+    if (!file.type.startsWith('image/')) {
+      throw new Error('This forensic model currently analyzes images only.');
+    }
+
+    // Maximum file size check (e.g. 50 MB)
+    if (file.size > 50 * 1024 * 1024) {
+      throw new Error('File exceeds the 50 MB limit for browser forensic analysis.');
+    }
+
+    const steps = [
+      { label: 'Image validated and dimensions inspected', done: false },
+      { label: 'Binary EXIF & camera metadata extracted', done: false },
+      { label: 'Pixel-level sensor noise & frequency residuals computed', done: false },
+      { label: 'Aspect-ratio preserved & multi-scale native 1:1 patches sampled', done: false },
+      { label: 'Deep forensic model inference across views', done: false },
+      { label: 'Multi-patch evidence aggregated & forensic report generated', done: false }
+    ];
+
+    showProgress(steps);
+
+    // Step 1: Load image and read dimensions
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = () => reject(new Error('Failed to load image file for forensic processing.'));
+      img.src = objectUrl;
+    });
+
+    const origW = img.naturalWidth || img.width;
+    const origH = img.naturalHeight || img.height;
+    const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+    const divisor = gcd(origW, origH);
+    const aspectStr = `${Math.round(origW / divisor)}:${Math.round(origH / divisor)}`;
+
+    const imageInfo = {
+      width: origW,
+      height: origH,
+      aspectRatio: aspectStr,
+      format: file.type || 'image/jpeg',
+      fileSize: file.size,
+      fileName: file.name
+    };
+
+    steps[0].done = true;
+    showProgress(steps);
+
+    // Step 2: Extract binary EXIF
+    const arrayBuffer = await file.arrayBuffer();
+    const exifData = parseExif(arrayBuffer);
+    steps[1].done = true;
+    showProgress(steps);
+
+    // Step 3: Compute forensic signals (Laplacian noise variance & color entropy)
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = origW;
+    tempCanvas.height = origH;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(img, 0, 0);
+
+    const forensicSignals = analyzeForensicSignals(tempCtx, origW, origH);
+    const applicability = checkApplicability(imageInfo, forensicSignals);
+    steps[2].done = true;
+    showProgress(steps);
+
+    // Step 4: Generate aspect-ratio preserved global view & native 1:1 patches
+    const patches = generateForensicPatches(img, 224);
+    steps[3].done = true;
+    showProgress(steps);
+
+    // Step 5: Model inference across all views
+    const detector = await getImageDetector();
+    const patchResults = [];
+
+    for (let i = 0; i < patches.length; i++) {
+      const p = patches[i];
+      // Convert patch canvas to high-quality JPEG data URL for robust pipeline execution
+      const patchDataUrl = p.canvas.toDataURL('image/jpeg', 0.95);
+      const rawPredictions = await detector(patchDataUrl);
+
+      const fakeItem = rawPredictions.find((item) => /fake|ai|synthetic|generated|artificial/i.test(item.label));
+      const realItem = rawPredictions.find((item) => /real|authentic|human|natural/i.test(item.label));
+
+      const synthScore = fakeItem ? Math.round(fakeItem.score * 100) : 50;
+      const realScore = realItem ? Math.round(realItem.score * 100) : (100 - synthScore);
+
+      patchResults.push({
+        id: p.id,
+        name: p.name,
+        type: p.type,
+        bounds: p.bounds,
+        description: p.description,
+        canvas: p.canvas,
+        syntheticScore: synthScore,
+        realScore: realScore,
+        rawPredictions
+      });
+    }
+
+    steps[4].done = true;
+    showProgress(steps);
+
+    // Step 6: Robust Multi-Patch Evidence Aggregation
+    const agg = aggregatePatchEvidence(patchResults, forensicSignals, applicability);
+    steps[5].done = true;
+    showProgress(steps);
+
+    // Construct Result Architecture matching Section 22
+    const finalReport = {
+      image_info: {
+        width: origW,
+        height: origH,
+        aspect_ratio: aspectStr,
+        format: imageInfo.format,
+        file_size: imageInfo.fileSize,
+        file_name: imageInfo.fileName
+      },
+      model: {
+        name: 'ViT-PatchForensics (Multi-Scale Aggregator)',
+        version: '2.0.0'
+      },
+      analysis: {
+        real_score: agg.realScore,
+        synthetic_score: agg.syntheticScore,
+        score_gap: agg.scoreGap,
+        mean_synth: agg.meanSynth,
+        median_synth: agg.medianSynth,
+        min_synth: agg.minSynth,
+        max_synth: agg.maxSynth,
+        patch_std_dev: agg.patchStdDev,
+        disagreement_range: agg.disagreementRange,
+        evidence_strength: agg.evidenceStrength,
+        evidence_consistency: agg.evidenceConsistency,
+        applicability: applicability.status,
+        applicability_reasons: applicability.reasons,
+        forensic_signals: forensicSignals,
+        exif: exifData
+      },
+      result: {
+        label: agg.label,
+        explanation: agg.explanation
+      },
+      patches: patchResults
+    };
+
+    URL.revokeObjectURL(objectUrl);
+    renderForensicReport(finalReport);
+
+  } catch (err) {
+    error.textContent = err.message || 'Analysis failed.';
+    console.error('[TrustLens Forensics Error]:', err);
+    error.hidden = false;
+  } finally {
+    button.disabled = false;
+    button.innerHTML = '<span>Analyze risk</span><span>?</span>';
+  }
+}
+
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[character]));
+}
+
+function renderForensicReport(report) {
+  const container = $('#results');
+  const info = report.image_info;
+  const model = report.model;
+  const analysis = report.analysis;
+  const result = report.result;
+  const patches = report.patches || [];
+  const exif = analysis.exif || {};
+  const sig = analysis.forensic_signals || {};
+
+  const badgeClass = result.label.toLowerCase().replaceAll(' ', '-');
+  const sizeMb = (info.file_size / (1024 * 1024)).toFixed(2);
+
+  let cameraMetaStr = 'None detected';
+  if (exif.hasExif && (exif.make || exif.model)) {
+    cameraMetaStr = `${exif.make || ''} ${exif.model || ''}`.trim();
+  } else if (exif.software) {
+    cameraMetaStr = `Software: ${exif.software}`;
+  }
+
+  let html = `
+    <div class="report-head">
+      <div>
+        <h3>IMAGE ANALYSIS REPORT</h3>
+        <div class="score-line">Resolution-Independent Multi-Scale Forensics · ${escapeHtml(model.name)}</div>
+      </div>
+      <span class="badge ${escapeHtml(badgeClass)}">${escapeHtml(result.label)}</span>
+    </div>
+
+    <!-- Section 23: File Information -->
+    <div class="section-title">FILE INFORMATION</div>
+    <div class="forensic-props-grid">
+      <div class="forensic-prop-item">
+        <span>Resolution</span>
+        <strong>${info.width} × ${info.height}</strong>
+      </div>
+      <div class="forensic-prop-item">
+        <span>Aspect Ratio</span>
+        <strong>${escapeHtml(info.aspect_ratio)}</strong>
+      </div>
+      <div class="forensic-prop-item">
+        <span>File Size</span>
+        <strong>${sizeMb} MB</strong>
+      </div>
+      <div class="forensic-prop-item">
+        <span>Format</span>
+        <strong>${escapeHtml(info.format.replace('image/', '').toUpperCase())}</strong>
+      </div>
+      <div class="forensic-prop-item">
+        <span>Device / Camera (EXIF)</span>
+        <strong>${escapeHtml(cameraMetaStr)}</strong>
+      </div>
+      <div class="forensic-prop-item">
+        <span>Noise Profile</span>
+        <strong>${sig.hasCameraLikeNoise ? 'Camera Noise' : sig.isLowTexture ? 'Low Texture' : 'Smooth Residual'}</strong>
+      </div>
+    </div>
+
+    <!-- Section 23: Assessment Banner -->
+    <div class="forensic-assessment-card">
+      <div class="forensic-assessment-header">
+        <span class="forensic-assessment-title">ASSESSMENT</span>
+        <span class="assessment-badge-large badge ${escapeHtml(badgeClass)}">${escapeHtml(result.label)}</span>
+      </div>
+      <div class="forensic-meta-row">
+        <div class="forensic-meta-pill"><span>Synthetic score:</span> <strong>${analysis.synthetic_score}%</strong></div>
+        <div class="forensic-meta-pill"><span>Real-image score:</span> <strong>${analysis.real_score}%</strong></div>
+        <div class="forensic-meta-pill"><span>Evidence strength:</span> <strong>${escapeHtml(analysis.evidence_strength)}</strong></div>
+        <div class="forensic-meta-pill"><span>Evidence consistency:</span> <strong>${escapeHtml(analysis.evidence_consistency)}</strong></div>
+        <div class="forensic-meta-pill"><span>Model applicability:</span> <strong>${escapeHtml(analysis.applicability)}</strong></div>
+      </div>
+    </div>
+
+    <!-- Section 23: WHY Explanation -->
+    <div class="why-card">
+      <h4>WHY?</h4>
+      <p>${escapeHtml(result.explanation)}</p>
+    </div>
+
+    <!-- Model Score Grid (Section 12: FORENSIC MODEL SCORES, NOT CALIBRATED PROBABILITIES) -->
+    <div class="section-title">FORENSIC MODEL SCORES</div>
+    <div class="model-score-grid">
+      <div class="model-score fake">
+        <span>SYNTHETIC SCORE</span>
+        <strong>${analysis.synthetic_score}%</strong>
+      </div>
+      <div class="model-score real">
+        <span>REAL-IMAGE SCORE</span>
+        <strong>${analysis.real_score}%</strong>
+      </div>
+    </div>
+    <p class="score-note">Scores reflect aggregated forensic evidence across global and native 1:1 patches. They are uncalibrated model scores, not definitive probabilities.</p>
+
+    <!-- Multi-Scale Patch Inspector -->
+    <div class="section-title">MULTI-SCALE FORENSIC PATCHES (${patches.length} REGIONS ANALYZED)</div>
+    <div class="patches-container" id="patch-gallery">
+  `;
+
+  for (let i = 0; i < patches.length; i++) {
+    const p = patches[i];
+    html += `
+      <div class="patch-card">
+        <div class="patch-thumb-wrapper" id="patch-thumb-${i}"></div>
+        <div class="patch-info">
+          <div class="patch-title">${escapeHtml(p.name)}</div>
+          <div class="patch-desc">${escapeHtml(p.description)}</div>
+          <div class="patch-score-bar">
+            <span class="real">Real: ${p.realScore}%</span>
+            <span class="fake">Synth: ${p.syntheticScore}%</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  html += `
+    </div>
+
+    <!-- Independent Verification Guidance -->
+    <div class="section-title">INDEPENDENT VERIFICATION</div>
+    <div class="tip">Check the original source of the image (publisher, photographer portfolio, or social channel) before drawing conclusions.</div>
+    <div class="tip">Search for other photographs from the same scene or camera sequence to confirm provenance.</div>
+    <div class="tip">Perform a reverse-image search (Google Lens, TinEye, Yandex) to discover prior appearances of this media.</div>
+    <div class="tip">Automated forensic models evaluate mathematical signals and can make errors on compressed, filtered, or artistic photography.</div>
+
+    <div class="disclaimer">
+      TRUSTLENS Multi-Scale Patch Forensics runs locally in your browser. It does not transmit image data to any external server. Automated forensics should be considered one signal among many, never definitive proof.
+    </div>
+  `;
+
+  container.innerHTML = html;
+
+  // Insert rendered patch canvases into thumbnail wrappers
+  for (let i = 0; i < patches.length; i++) {
+    const wrapper = document.getElementById(`patch-thumb-${i}`);
+    if (wrapper && patches[i].canvas) {
+      wrapper.appendChild(patches[i].canvas);
+    }
+  }
+}
+
+function render(data) {
+  const indicators = data.indicators || [];
+  const guidance = data.guidance || [];
+  const isImageModel = data.mode === 'image-model';
+  const level = (data.risk_level || 'Needs Verification').toLowerCase().replaceAll(' ', '-');
+  const scoreLabel = `${indicators.length} observable indicator${indicators.length === 1 ? '' : 's'} · heuristic analysis`;
+
+  let html = `
+    <div class="report-head">
+      <div>
+        <h3>Explainable risk report</h3>
+        <div class="score-line">${escapeHtml(scoreLabel)}</div>
+      </div>
+      <span class="badge ${escapeHtml(level)}">${escapeHtml(data.risk_level || 'Needs Verification')}</span>
+    </div>
+  `;
+
+  if (data.mode === 'media') {
+    html += `
+      <div class="section-title">FILE INSPECTION</div>
+      <div class="indicator">
+        <div class="indicator-top"><strong>${escapeHtml(data.filename || 'Media file')}</strong>
+          <span class="severity low">${((data.size_bytes || 0) / 1024 / 1024).toFixed(2)} MB</span>
+        </div>
+        <p>${escapeHtml(data.media_analysis || 'Metadata only; no authenticity result was produced.')}</p>
+      </div>
+    `;
+  }
+
+  html += `<div class="section-title">OBSERVED INDICATORS</div>`;
+  if (indicators.length) {
+    html += indicators.map((item) => `
+      <div class="indicator">
+        <div class="indicator-top"><strong>${escapeHtml(item.title)}</strong>
+          <span class="severity ${escapeHtml((item.severity || 'low').toLowerCase())}">${escapeHtml(item.severity || 'Low')}</span>
+        </div>
+        <p>${escapeHtml(item.explanation)}</p>
+        <div class="evidence">Evidence: ${escapeHtml(item.evidence)}</div>
+      </div>
+    `).join('');
+  } else {
+    html += '<div class="no-signals">No configured indicators were detected. This does not establish that content is safe or authentic.</div>';
+  }
+
+  if (data.progression?.length) {
+    html += '<div class="section-title">SOCIAL-ENGINEERING PROGRESSION</div><div class="progress">';
+    html += data.progression.map((step) => `<div class="stage ${step.observed ? 'done' : ''}">${escapeHtml(step.step)}</div>`).join('');
+    html += '</div>';
+  }
+
+  html += '<div class="section-title">INDEPENDENT VERIFICATION</div>';
+  html += guidance.map((tip) => `<div class="tip">${escapeHtml(tip)}</div>`).join('');
+  html += `<div class="disclaimer">${escapeHtml(data.disclaimer || '')}</div>`;
+  $('#results').innerHTML = html;
+}
+
